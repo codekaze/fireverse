@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:firedartextreme/firedart.dart';
 
-const apiKey = 'Project Settings -> General -> Web API Key';
-const projectId = 'Project Settings -> General -> Project ID';
-const email = 'you@server.com';
-const password = '1234';
+const apiKey = "AIzaSyAjaGYDdHvb0_vsG3JRS6ZVUegaicjn5Uo";
+const projectId = "freeproject-c8687";
+const email = 'demo@codekaze.com';
+const password = '123456';
 
 Future main() async {
   FireDartFirebaseAuth.initialize(apiKey, FireDartVolatileStore());
@@ -23,7 +23,7 @@ Future main() async {
   print(user);
 
   // Instantiate a reference to a document - this happens offline
-  var ref = FireDartFirestore.instance.collection('test').document('doc');
+  var ref = FireDartFirestore.instance.collection('test').doc('doc');
 
   // Subscribe to changes to that document
   ref.stream.listen((document) => print('updated: $document'));
