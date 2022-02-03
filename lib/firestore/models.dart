@@ -1,9 +1,10 @@
 import 'dart:collection';
 
-import 'package:firedart/generated/google/firestore/v1/document.pb.dart' as fs;
-import 'package:firedart/generated/google/firestore/v1/query.pb.dart';
-import 'package:firedart/generated/google/protobuf/wrappers.pb.dart';
-import 'package:firedart/generated/google/type/latlng.pb.dart';
+import 'package:firedartextreme/generated/google/firestore/v1/document.pb.dart'
+    as fs;
+import 'package:firedartextreme/generated/google/firestore/v1/query.pb.dart';
+import 'package:firedartextreme/generated/google/protobuf/wrappers.pb.dart';
+import 'package:firedartextreme/generated/google/type/latlng.pb.dart';
 import 'package:grpc/grpc.dart';
 
 import 'firestore_gateway.dart';

@@ -1,4 +1,4 @@
-import 'package:firedart/auth/firebase_auth.dart';
+import 'package:firedartextreme/auth/firebase_auth.dart';
 
 import 'firestore_gateway.dart';
 import 'models.dart';
@@ -39,7 +39,8 @@ class FireDartFirestore {
             databaseId: databaseId, auth: auth),
         assert(projectId.isNotEmpty);
 
-  Reference reference(String path) => Reference.create(_gateway, path);
+  FireDartReference reference(String path) =>
+      FireDartReference.create(_gateway, path);
 
   FireDartCollectionReference collection(String path) =>
       FireDartCollectionReference(_gateway, path);

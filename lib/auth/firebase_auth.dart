@@ -1,8 +1,8 @@
-import 'package:firedart/auth/auth_gateway.dart';
-import 'package:firedart/auth/client.dart';
-import 'package:firedart/auth/token_provider.dart';
-import 'package:firedart/auth/token_store.dart';
-import 'package:firedart/auth/user_gateway.dart';
+import 'package:firedartextreme/auth/auth_gateway.dart';
+import 'package:firedartextreme/auth/client.dart';
+import 'package:firedartextreme/auth/token_provider.dart';
+import 'package:firedartextreme/auth/token_store.dart';
+import 'package:firedartextreme/auth/user_gateway.dart';
 import 'package:http/http.dart' as http;
 
 class FireDartFirebaseAuth {

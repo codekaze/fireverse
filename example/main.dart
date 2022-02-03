@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:firedart/firedart.dart';
+import 'package:firedartextreme/firedart.dart';
 
 const apiKey = 'Project Settings -> General -> Web API Key';
 const projectId = 'Project Settings -> General -> Project ID';

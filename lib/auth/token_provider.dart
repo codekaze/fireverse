@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:firedart/auth/client.dart';
-import 'package:firedart/auth/token_store.dart';
+import 'package:firedartextreme/auth/client.dart';
+import 'package:firedartextreme/auth/token_store.dart';
 
 import 'exceptions.dart';
 
