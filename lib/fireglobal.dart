@@ -1,24 +1,23 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as fs;
-import 'package:firedartextreme/generated/google/protobuf/timestamp.pb.dart'
-    as fd;
+import 'package:fireverse/generated/google/protobuf/timestamp.pb.dart' as fd;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firedartextreme/firedart.dart';
+import 'package:fireverse/firedart.dart';
 
-class FireGlobalOrder {
+class FireOrder {
   final String field;
   final bool descending;
 
-  FireGlobalOrder({
+  FireOrder({
     required this.field,
     this.descending = false,
   });
 }
 
-class FireGlobalWhereField {
+class FireWhereField {
   final String field;
   final String? isEqualTo;
   final String? isGreaterThan;
@@ -26,7 +25,7 @@ class FireGlobalWhereField {
   final String? isLessThan;
   final String? isLessThanOrEqualTo;
 
-  FireGlobalWhereField({
+  FireWhereField({
     required this.field,
     this.isEqualTo,
     this.isGreaterThan,
@@ -36,7 +35,7 @@ class FireGlobalWhereField {
   });
 }
 
-class FireGlobal {
+class Fire {
   static Future initialize({
     required String apiKey,
     required String projectId,
@@ -138,8 +137,8 @@ class FireGlobal {
 
   static get({
     required String collectionName,
-    List<FireGlobalWhereField>? where,
-    FireGlobalOrder? fireGlobalOrder,
+    List<FireWhereField>? where,
+    FireOrder? FireOrder,
   }) async {
     if (Platform.isWindows) {
       var refs = [];
@@ -182,10 +181,10 @@ class FireGlobal {
         }
       }
 
-      if (fireGlobalOrder != null) {
+      if (FireOrder != null) {
         var newref = ref.orderBy(
-          fireGlobalOrder.field,
-          descending: fireGlobalOrder.descending,
+          FireOrder.field,
+          descending: FireOrder.descending,
         );
         refs.add(newref);
       }

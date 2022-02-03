@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firedartextreme/auth/token_provider.dart';
+import 'package:fireverse/auth/token_provider.dart';
 import 'package:http/http.dart' as http;
 
 class FireDartVerboseClient extends http.BaseClient {

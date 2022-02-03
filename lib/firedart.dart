@@ -1,8 +1,8 @@
 library firedart;
 
-export 'package:firedartextreme/auth/client.dart';
-export 'package:firedartextreme/auth/firebase_auth.dart';
-export 'package:firedartextreme/auth/token_store.dart';
-export 'package:firedartextreme/firestore/firestore.dart';
-export 'package:firedartextreme/firestore/models.dart';
-export 'package:firedartextreme/fireglobal.dart';
+export 'package:fireverse/auth/client.dart';
+export 'package:fireverse/auth/firebase_auth.dart';
+export 'package:fireverse/auth/token_store.dart';
+export 'package:fireverse/firestore/firestore.dart';
+export 'package:fireverse/firestore/models.dart';
+export 'package:fireverse/Fire.dart';

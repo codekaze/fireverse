@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:firedartextreme/auth/client.dart';
-import 'package:firedartextreme/auth/token_provider.dart';
+import 'package:fireverse/auth/client.dart';
+import 'package:fireverse/auth/token_provider.dart';
 
 import 'exceptions.dart';
 import 'user_gateway.dart';

@@ -1,4 +1,4 @@
-import 'package:firedartextreme/auth/firebase_auth.dart';
+import 'package:fireverse/auth/firebase_auth.dart';
 
 import 'firestore_gateway.dart';
 import 'models.dart';
