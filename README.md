@@ -11,6 +11,7 @@ That's the reason, I made this package.
 Basically, this package is a combination of FireDart and the official Firebase library.
 
 ### TODO
+#### Firebase Auth
 - [x] Email Sign In
 - [x] Anonymous Sign In
 - [ ] Google Login
