@@ -394,6 +394,39 @@ class Fire {
     }
   }
 
+  static getDocRef({
+    required String collectionName,
+    required String docId,
+  }) async {
+    if (Platform.isWindows) {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+      ).doc(docId);
+      return await ref;
+    } else {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+      ).doc(docId);
+      return await ref;
+    }
+  }
+
+  static getCollectionRef({
+    required String collectionName,
+  }) async {
+    if (Platform.isWindows) {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+      );
+      return await ref;
+    } else {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+      );
+      return await ref;
+    }
+  }
+
   static add({
     required String collectionName,
     required Map<String, dynamic> value,
