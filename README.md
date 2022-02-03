@@ -15,7 +15,7 @@ Basically, this package is a combination of FireDart and the official Firebase l
 - [x] Email Sign In
 - [x] Anonymous Sign In
 - [ ] Google Login
-- [ ] Register 
+- [x] Register 
 - [ ] Reset Password
 
 #### Firestore

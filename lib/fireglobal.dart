@@ -129,6 +129,24 @@ class Fire {
     return false;
   }
 
+  static Future resetPassword({
+    required String email,
+  }) async {
+    if (Platform.isWindows) {
+      try {
+        return await FireDartFirebaseAuth.instance.resetPassword(email);
+      } on Exception catch (_) {
+        //
+      }
+    } else {
+      try {
+        return await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      } on Exception catch (_) {
+        //
+      }
+    }
+  }
+
   static Future<bool> register({
     required String email,
     required String password,
