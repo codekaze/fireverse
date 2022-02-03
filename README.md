@@ -22,9 +22,9 @@ Basically, this package is a combination of FireDart and the official Firebase l
 - [x] .snapshot
 - [x] .get
 - [x] .get (where) (windows)
-- [ ] .get (where) (android/ios)
+- [x] .get (where) (android/ios)
 - [x] .get (orderBy) (windows)
-- [ ] .get (orderBy) (android/ios)
+- [x] .get (orderBy) (android/ios)
 - [x] .add
 - [x] .update 
 - [x] .delete
