@@ -1,7 +1,7 @@
 name: fireverse
 description: A dart-native implementation of the Firebase Auth and Firestore SDKs.
 version: 0.0.1
-homepage: https://github.com/codekaze/firedart
+homepage: https://github.com/codekaze/fireverse
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

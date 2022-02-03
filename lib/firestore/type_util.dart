@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:fireverse/firedart.dart';
+import 'package:fireverse/fireverse.dart';
 import 'package:fireverse/generated/google/firestore/v1/document.pb.dart' as fs;
 import 'package:fireverse/generated/google/protobuf/struct.pb.dart';
 import 'package:fireverse/generated/google/protobuf/struct.pbenum.dart';

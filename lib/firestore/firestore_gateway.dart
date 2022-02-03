@@ -6,7 +6,7 @@ import 'package:fireverse/generated/google/firestore/v1/firestore.pbgrpc.dart';
 import 'package:fireverse/generated/google/firestore/v1/query.pb.dart';
 import 'package:grpc/grpc.dart';
 
-import '../firedart.dart';
+import '../fireverse.dart';
 import 'token_authenticator.dart';
 
 class FireDartFirestoreGatewayStreamCache {

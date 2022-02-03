@@ -1,6 +1,6 @@
 import 'package:grpc/grpc.dart';
 
-import '../firedart.dart';
+import '../fireverse.dart';
 
 class FireDartTokenAuthenticator {
   final FireDartFirebaseAuth auth;

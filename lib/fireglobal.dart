@@ -5,7 +5,7 @@ import 'package:fireverse/generated/google/protobuf/timestamp.pb.dart' as fd;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fireverse/firedart.dart';
+import 'package:fireverse/fireverse.dart';
 
 class FireOrder {
   final String field;
@@ -233,7 +233,6 @@ class Fire {
   static delete({
     required String collectionName,
     required String docId,
-    required Map<String, dynamic> value,
   }) async {
     if (Platform.isWindows) {
       return await FireDartFirestore.instance
