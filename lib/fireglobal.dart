@@ -129,6 +129,59 @@ class Fire {
     return false;
   }
 
+  static Future<bool> register({
+    required String email,
+    required String password,
+  }) async {
+    if (Platform.isWindows) {
+      var auth = FireDartFirebaseAuth.instance;
+      try {
+        await auth.signUp(email, password);
+        await auth.signIn(email, password);
+
+        if (auth.isSignedIn) {
+          var user = await auth.getUser();
+          currentUser = GlobalUser(
+            uid: user.id,
+            displayName: user.displayName,
+            email: user.email,
+            phoneNumber: null,
+            photoURL: user.photoUrl,
+          );
+          return true;
+        }
+      } on Exception catch (_) {
+        return false;
+      }
+    } else {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        var auth = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        if (auth.user != null) {
+          currentUser = GlobalUser(
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            displayName: FirebaseAuth.instance.currentUser!.displayName,
+            email: FirebaseAuth.instance.currentUser!.email,
+            phoneNumber: FirebaseAuth.instance.currentUser!.phoneNumber,
+            photoURL: FirebaseAuth.instance.currentUser!.photoURL,
+          );
+          return true;
+        }
+      } on Exception catch (_) {
+        return false;
+      }
+    }
+    return false;
+  }
+
   static GlobalUser? currentUser;
 
   static getRefFromWhereAndOrder({
