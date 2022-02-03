@@ -1,6 +1,6 @@
-# firedart
+# fireverse
 
-[![pub package](https://img.shields.io/pub/v/firedart.svg)](https://pub.dartlang.org/packages/firedart)
+[![pub package](https://img.shields.io/pub/v/firedart.svg)](https://pub.dartlang.org/packages/fireverse)
 
 A dart-native implementation of the Firebase Auth and Firestore SDKs.
 
@@ -14,7 +14,7 @@ Add firedart to your `pubspec.yaml` file:
 
 ``` yaml
 dependencies:
-  firedart: [latest version]
+  fireverse: [latest version]
 ```
 
 ## Firebase Auth
