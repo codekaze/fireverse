@@ -1,8 +1,5 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart' as fs;
-import 'package:fireverse/generated/google/protobuf/timestamp.pb.dart' as fd;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fireverse/fireverse.dart';
