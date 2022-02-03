@@ -8,6 +8,32 @@ const email = 'demo@codekaze.com';
 const password = '123456';
 
 Future main() async {
+  /*
+  ! Initialize
+  */
+  await FireGlobal.initialize(
+    apiKey: "AIzaSyAjaGYDdHvb0_vsG3JRS6ZVUegaicjn5Uo",
+    projectId: "freeproject-c8687",
+    appId: "1:803703594987:web:1eab5d874a2b50260783ae",
+    messagingSenderId: "803703594987",
+  );
+
+  /*
+  ! Sign In
+  */
+  await FireGlobal.signIn(
+    email: email,
+    password: password,
+  );
+
+  /*
+  ! Get Current User
+  */
+  var user = FireGlobal.currentUser;
+
+  return;
+
+  /*
   FireDartFirebaseAuth.initialize(apiKey, FireDartVolatileStore());
   FireDartFirestore.initialize(projectId); // Firestore reuses the auth client
 
@@ -41,4 +67,5 @@ Future main() async {
   await Future.delayed(Duration(seconds: 1));
 
   exit(0);
+  */
 }

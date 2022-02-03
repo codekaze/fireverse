@@ -107,7 +107,7 @@ class FireDartCollectionReference extends FireDartReference {
   FireDartQueryReference limit(int count) =>
       FireDartQueryReference(gateway, path).limit(count);
 
-  FireDartDocumentReference document(String id) =>
+  FireDartDocumentReference doc(String id) =>
       FireDartDocumentReference(_gateway, '$path/$id');
 
   Future<FireDartPage<FireDartDocument>> get(
