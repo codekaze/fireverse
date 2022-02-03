@@ -6,26 +6,26 @@ import 'package:firedart/auth/token_provider.dart';
 import 'exceptions.dart';
 import 'user_gateway.dart';
 
-class AuthGateway {
-  final KeyClient client;
-  final TokenProvider tokenProvider;
+class FireDartAuthGateway {
+  final FireDartKeyClient client;
+  final FireDartTokenProvider tokenProvider;
 
-  AuthGateway(this.client, this.tokenProvider);
+  FireDartAuthGateway(this.client, this.tokenProvider);
 
-  Future<User> signUp(String email, String password) async =>
+  Future<FireDartUser> signUp(String email, String password) async =>
       _auth('signUp', {'email': email, 'password': password});
 
-  Future<User> signIn(String email, String password) async =>
+  Future<FireDartUser> signIn(String email, String password) async =>
       _auth('signInWithPassword', {'email': email, 'password': password});
 
-  Future<User> signInAnonymously() async => _auth('signUp', {});
+  Future<FireDartUser> signInAnonymously() async => _auth('signUp', {});
 
   Future<void> resetPassword(String email) => _post('sendOobCode', {
         'requestType': 'PASSWORD_RESET',
         'email': email,
       });
 
-  Future<User> _auth(String method, Map<String, String> payload) async {
+  Future<FireDartUser> _auth(String method, Map<String, String> payload) async {
     var body = {
       ...payload,
       'returnSecureToken': 'true',
@@ -33,7 +33,7 @@ class AuthGateway {
 
     var map = await _post(method, body);
     tokenProvider.setToken(map);
-    return User.fromMap(map);
+    return FireDartUser.fromMap(map);
   }
 
   Future<Map<String, dynamic>> _post(
@@ -47,7 +47,7 @@ class AuthGateway {
     );
 
     if (response.statusCode != 200) {
-      throw AuthException(response.body);
+      throw FireDartAuthException(response.body);
     }
 
     return json.decode(response.body);

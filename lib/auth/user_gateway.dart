@@ -3,18 +3,19 @@ import 'dart:convert';
 import 'package:firedart/auth/client.dart';
 import 'package:firedart/auth/token_provider.dart';
 
-class UserGateway {
-  final UserClient _client;
+class FireDartUserGateway {
+  final FireDartUserClient _client;
 
-  UserGateway(KeyClient client, TokenProvider tokenProvider)
-      : _client = UserClient(client, tokenProvider);
+  FireDartUserGateway(
+      FireDartKeyClient client, FireDartTokenProvider tokenProvider)
+      : _client = FireDartUserClient(client, tokenProvider);
 
   Future<void> requestEmailVerification() =>
       _post('sendOobCode', {'requestType': 'VERIFY_EMAIL'});
 
-  Future<User> getUser() async {
+  Future<FireDartUser> getUser() async {
     var map = await _post('lookup', {});
-    return User.fromMap(map['users'][0]);
+    return FireDartUser.fromMap(map['users'][0]);
   }
 
   Future<void> changePassword(String password) async {
@@ -49,14 +50,14 @@ class UserGateway {
   }
 }
 
-class User {
+class FireDartUser {
   final String id;
   final String? displayName;
   final String? photoUrl;
   final String? email;
   final bool? emailVerified;
 
-  User.fromMap(Map<String, dynamic> map)
+  FireDartUser.fromMap(Map<String, dynamic> map)
       : id = map['localId'],
         displayName = map['displayName'],
         photoUrl = map['photoUrl'],

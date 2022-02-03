@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-class AuthException implements Exception {
+class FireDartAuthException implements Exception {
   final String body;
 
   String get message => jsonDecode(body)['error']['message'];
 
   String get errorCode => message.split(' ')[0];
 
-  AuthException(this.body);
+  FireDartAuthException(this.body);
 
   @override
   String toString() => 'AuthException: $errorCode';
 }
 
-class SignedOutException implements Exception {
+class FireDartSignedOutException implements Exception {
   @override
   String toString() =>
       'SignedOutException: Attempted to call a protected resource while signed out';

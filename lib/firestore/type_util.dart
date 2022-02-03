@@ -9,7 +9,7 @@ import 'package:fixnum/fixnum.dart';
 
 import 'firestore_gateway.dart';
 
-abstract class TypeUtil {
+abstract class FireDartTypeUtil {
   static fs.Value encode(dynamic value) {
     if (value == null) {
       return fs.Value()..nullValue = NullValue.NULL_VALUE;
@@ -43,17 +43,17 @@ abstract class TypeUtil {
     if (value is Uint8List) {
       return fs.Value()..bytesValue = value;
     }
-    if (value is DocumentReference) {
+    if (value is FireDartDocumentReference) {
       return fs.Value()..referenceValue = value.fullPath;
     }
-    if (value is GeoPoint) {
+    if (value is FireDartGeoPoint) {
       return fs.Value()..geoPointValue = value.toLatLng();
     }
 
     throw Exception('Unknown type: ${value.runtimeType}');
   }
 
-  static dynamic decode(fs.Value value, FirestoreGateway gateway) {
+  static dynamic decode(fs.Value value, FireDartFirestoreGateway gateway) {
     switch (value.whichValueType()) {
       case fs.Value_ValueType.nullValue:
         return null;
@@ -70,9 +70,9 @@ abstract class TypeUtil {
       case fs.Value_ValueType.bytesValue:
         return value.bytesValue;
       case fs.Value_ValueType.referenceValue:
-        return DocumentReference(gateway, value.referenceValue);
+        return FireDartDocumentReference(gateway, value.referenceValue);
       case fs.Value_ValueType.geoPointValue:
-        return GeoPoint.fromLatLng(value.geoPointValue);
+        return FireDartGeoPoint.fromLatLng(value.geoPointValue);
       case fs.Value_ValueType.arrayValue:
         return value.arrayValue.values
             .map((item) => decode(item, gateway))

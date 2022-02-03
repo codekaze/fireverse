@@ -3,25 +3,26 @@ import 'package:firedart/auth/firebase_auth.dart';
 import 'firestore_gateway.dart';
 import 'models.dart';
 
-class Firestore {
+class FireDartFirestore {
   /* Singleton interface */
-  static Firestore? _instance;
+  static FireDartFirestore? _instance;
 
-  static Firestore initialize(String projectId, {String? databaseId}) {
+  static FireDartFirestore initialize(String projectId, {String? databaseId}) {
     if (_instance != null) {
       throw Exception('Firestore instance was already initialized');
     }
-    FirebaseAuth? auth;
+    FireDartFirebaseAuth? auth;
     try {
-      auth = FirebaseAuth.instance;
+      auth = FireDartFirebaseAuth.instance;
     } catch (e) {
       // FirebaseAuth isn't initialized
     }
-    _instance = Firestore(projectId, databaseId: databaseId, auth: auth);
+    _instance =
+        FireDartFirestore(projectId, databaseId: databaseId, auth: auth);
     return _instance!;
   }
 
-  static Firestore get instance {
+  static FireDartFirestore get instance {
     if (_instance == null) {
       throw Exception(
           "Firestore hasn't been initialized. Please call Firestore.initialize() before using it.");
@@ -30,17 +31,19 @@ class Firestore {
   }
 
   /* Instance interface */
-  final FirestoreGateway _gateway;
+  final FireDartFirestoreGateway _gateway;
 
-  Firestore(String projectId, {String? databaseId, FirebaseAuth? auth})
-      : _gateway =
-            FirestoreGateway(projectId, databaseId: databaseId, auth: auth),
+  FireDartFirestore(String projectId,
+      {String? databaseId, FireDartFirebaseAuth? auth})
+      : _gateway = FireDartFirestoreGateway(projectId,
+            databaseId: databaseId, auth: auth),
         assert(projectId.isNotEmpty);
 
   Reference reference(String path) => Reference.create(_gateway, path);
 
-  CollectionReference collection(String path) =>
-      CollectionReference(_gateway, path);
+  FireDartCollectionReference collection(String path) =>
+      FireDartCollectionReference(_gateway, path);
 
-  DocumentReference document(String path) => DocumentReference(_gateway, path);
+  FireDartDocumentReference document(String path) =>
+      FireDartDocumentReference(_gateway, path);
 }

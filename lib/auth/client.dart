@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:firedart/auth/token_provider.dart';
 import 'package:http/http.dart' as http;
 
-class VerboseClient extends http.BaseClient {
+class FireDartVerboseClient extends http.BaseClient {
   final http.Client _client;
 
-  VerboseClient() : _client = http.Client();
+  FireDartVerboseClient() : _client = http.Client();
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -35,11 +35,11 @@ class VerboseClient extends http.BaseClient {
   }
 }
 
-class KeyClient extends http.BaseClient {
+class FireDartKeyClient extends http.BaseClient {
   final http.Client client;
   final String apiKey;
 
-  KeyClient(this.client, this.apiKey);
+  FireDartKeyClient(this.client, this.apiKey);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
@@ -55,11 +55,11 @@ class KeyClient extends http.BaseClient {
   }
 }
 
-class UserClient extends http.BaseClient {
-  final KeyClient client;
-  final TokenProvider tokenProvider;
+class FireDartUserClient extends http.BaseClient {
+  final FireDartKeyClient client;
+  final FireDartTokenProvider tokenProvider;
 
-  UserClient(this.client, this.tokenProvider);
+  FireDartUserClient(this.client, this.tokenProvider);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {

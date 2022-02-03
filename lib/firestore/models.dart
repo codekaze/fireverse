@@ -9,28 +9,29 @@ import 'package:grpc/grpc.dart';
 import 'firestore_gateway.dart';
 import 'type_util.dart';
 
-abstract class Reference {
-  final FirestoreGateway _gateway;
+abstract class FireDartReference {
+  final FireDartFirestoreGateway _gateway;
   final String path;
 
   String get id => path.substring(path.lastIndexOf('/') + 1);
 
   String get fullPath => '${_gateway.database}/$path';
 
-  Reference(this._gateway, String path)
+  FireDartReference(this._gateway, String path)
       : path = _trimSlashes(path.startsWith(_gateway.database)
             ? path.substring(_gateway.database.length + 1)
             : path);
 
-  factory Reference.create(FirestoreGateway gateway, String path) {
+  factory FireDartReference.create(
+      FireDartFirestoreGateway gateway, String path) {
     return _trimSlashes(path).split('/').length % 2 == 0
-        ? DocumentReference(gateway, path)
-        : CollectionReference(gateway, path);
+        ? FireDartDocumentReference(gateway, path)
+        : FireDartCollectionReference(gateway, path);
   }
 
   @override
   bool operator ==(other) =>
-      other is Reference &&
+      other is FireDartReference &&
       runtimeType == other.runtimeType &&
       fullPath == other.fullPath;
 
@@ -42,7 +43,7 @@ abstract class Reference {
   fs.Document _encodeMap(Map<String, dynamic> map) {
     var document = fs.Document();
     map.forEach((key, value) {
-      document.fields[key] = TypeUtil.encode(value);
+      document.fields[key] = FireDartTypeUtil.encode(value);
     });
     return document;
   }
@@ -53,19 +54,20 @@ abstract class Reference {
   }
 }
 
-class CollectionReference extends Reference {
-  final FirestoreGateway gateway;
+class FireDartCollectionReference extends FireDartReference {
+  final FireDartFirestoreGateway gateway;
 
-  /// Constructs a [CollectionReference] using [FirestoreGateway] and path.
+  /// Constructs a [FireDartCollectionReference] using [FireDartFirestoreGateway] and path.
   ///
   /// Throws [Exception] if path contains odd amount of '/'.
-  CollectionReference(this.gateway, String path) : super(gateway, path) {
+  FireDartCollectionReference(this.gateway, String path)
+      : super(gateway, path) {
     if (fullPath.split('/').length % 2 == 1) {
       throw Exception('Path is not a collection: $path');
     }
   }
 
-  QueryReference where(
+  FireDartQueryReference where(
     String fieldPath, {
     dynamic isEqualTo,
     dynamic isLessThan,
@@ -77,7 +79,7 @@ class CollectionReference extends Reference {
     List<dynamic>? whereIn,
     bool isNull = false,
   }) {
-    return QueryReference(gateway, path).where(fieldPath,
+    return FireDartQueryReference(gateway, path).where(fieldPath,
         isEqualTo: isEqualTo,
         isLessThan: isLessThan,
         isLessThanOrEqualTo: isLessThanOrEqualTo,
@@ -89,51 +91,54 @@ class CollectionReference extends Reference {
         isNull: isNull);
   }
 
-  /// Returns [CollectionReference] that's additionally sorted by the specified
+  /// Returns [FireDartCollectionReference] that's additionally sorted by the specified
   /// [fieldPath].
   ///
   /// The field is a [String] representing a single field name.
-  /// After a [CollectionReference] order by call, you cannot add any more [orderBy]
+  /// After a [FireDartCollectionReference] order by call, you cannot add any more [orderBy]
   /// calls.
-  QueryReference orderBy(String fieldPath, {bool descending = false}) =>
-      QueryReference(gateway, path).orderBy(fieldPath, descending: descending);
+  FireDartQueryReference orderBy(String fieldPath, {bool descending = false}) =>
+      FireDartQueryReference(gateway, path)
+          .orderBy(fieldPath, descending: descending);
 
-  /// Returns [CollectionReference] that's additionally limited to only return up
+  /// Returns [FireDartCollectionReference] that's additionally limited to only return up
   /// to the specified number of documents.
-  QueryReference limit(int count) => QueryReference(gateway, path).limit(count);
+  FireDartQueryReference limit(int count) =>
+      FireDartQueryReference(gateway, path).limit(count);
 
-  DocumentReference document(String id) =>
-      DocumentReference(_gateway, '$path/$id');
+  FireDartDocumentReference document(String id) =>
+      FireDartDocumentReference(_gateway, '$path/$id');
 
-  Future<Page<Document>> get(
+  Future<FireDartPage<FireDartDocument>> get(
           {int pageSize = 1024, String nextPageToken = ''}) =>
       _gateway.getCollection(fullPath, pageSize, nextPageToken);
 
-  Stream<List<Document>> get stream => _gateway.streamCollection(fullPath);
+  Stream<List<FireDartDocument>> get stream =>
+      _gateway.streamCollection(fullPath);
 
   /// Create a document with a random id.
-  Future<Document> add(Map<String, dynamic> map) =>
+  Future<FireDartDocument> add(Map<String, dynamic> map) =>
       _gateway.createDocument(fullPath, null, _encodeMap(map));
 }
 
-class DocumentReference extends Reference {
-  DocumentReference(FirestoreGateway gateway, String path)
+class FireDartDocumentReference extends FireDartReference {
+  FireDartDocumentReference(FireDartFirestoreGateway gateway, String path)
       : super(gateway, path) {
     if (fullPath.split('/').length % 2 == 0) {
       throw Exception('Path is not a document: $path');
     }
   }
 
-  CollectionReference collection(String id) {
-    return CollectionReference(_gateway, '$path/$id');
+  FireDartCollectionReference collection(String id) {
+    return FireDartCollectionReference(_gateway, '$path/$id');
   }
 
-  Future<Document> get() => _gateway.getDocument(fullPath);
+  Future<FireDartDocument> get() => _gateway.getDocument(fullPath);
 
   @Deprecated('Use the stream getter instead')
-  Stream<Document?> subscribe() => stream;
+  Stream<FireDartDocument?> subscribe() => stream;
 
-  Stream<Document?> get stream => _gateway.streamDocument(fullPath);
+  Stream<FireDartDocument?> get stream => _gateway.streamDocument(fullPath);
 
   /// Check if a document exists.
   Future<bool> get exists async {
@@ -150,8 +155,9 @@ class DocumentReference extends Reference {
   }
 
   /// Create a document if it doesn't exist, otherwise throw exception.
-  Future<Document> create(Map<String, dynamic> map) => _gateway.createDocument(
-      fullPath.substring(0, fullPath.lastIndexOf('/')), id, _encodeMap(map));
+  Future<FireDartDocument> create(Map<String, dynamic> map) =>
+      _gateway.createDocument(fullPath.substring(0, fullPath.lastIndexOf('/')),
+          id, _encodeMap(map));
 
   /// Create or update a document.
   /// In the case of an update, any fields not referenced in the payload will be deleted.
@@ -167,11 +173,11 @@ class DocumentReference extends Reference {
   Future<void> delete() async => await _gateway.deleteDocument(fullPath);
 }
 
-class Document {
-  final FirestoreGateway _gateway;
+class FireDartDocument {
+  final FireDartFirestoreGateway _gateway;
   final fs.Document _rawDocument;
 
-  Document(this._gateway, this._rawDocument);
+  FireDartDocument(this._gateway, this._rawDocument);
 
   String get id => path.substring(path.lastIndexOf('/') + 1);
 
@@ -185,25 +191,27 @@ class Document {
   Map<String, dynamic> get map =>
       _rawDocument.fields.map((key, _) => MapEntry(key, this[key]));
 
-  DocumentReference get reference => DocumentReference(_gateway, path);
+  FireDartDocumentReference get reference =>
+      FireDartDocumentReference(_gateway, path);
 
   dynamic operator [](String key) {
     if (!_rawDocument.fields.containsKey(key)) return null;
-    return TypeUtil.decode(_rawDocument.fields[key]!, _gateway);
+    return FireDartTypeUtil.decode(_rawDocument.fields[key]!, _gateway);
   }
 
   @override
   String toString() => '$path $map';
 }
 
-class GeoPoint {
+class FireDartGeoPoint {
   final double latitude;
   final double longitude;
 
-  const GeoPoint(this.latitude, this.longitude);
+  const FireDartGeoPoint(this.latitude, this.longitude);
 
-  /// Creates the [GeoPoint] instance using [LatLng].
-  GeoPoint.fromLatLng(LatLng value) : this(value.latitude, value.longitude);
+  /// Creates the [FireDartGeoPoint] instance using [LatLng].
+  FireDartGeoPoint.fromLatLng(LatLng value)
+      : this(value.latitude, value.longitude);
 
   @override
   String toString() => 'lat: $latitude, lon: $longitude';
@@ -216,7 +224,7 @@ class GeoPoint {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is GeoPoint &&
+      other is FireDartGeoPoint &&
           runtimeType == other.runtimeType &&
           latitude == other.latitude &&
           longitude == other.longitude;
@@ -225,7 +233,7 @@ class GeoPoint {
   int get hashCode => latitude.hashCode ^ longitude.hashCode;
 }
 
-class Page<T> extends ListBase<T> {
+class FireDartPage<T> extends ListBase<T> {
   final _list = <T>[];
   final String nextPageToken;
 
@@ -243,20 +251,21 @@ class Page<T> extends ListBase<T> {
   @override
   void operator []=(int index, T value) => _list[index] = value;
 
-  Page(Iterable<T> iterable, this.nextPageToken) {
+  FireDartPage(Iterable<T> iterable, this.nextPageToken) {
     _list.addAll(iterable);
   }
 }
 
-class QueryReference extends Reference {
+class FireDartQueryReference extends FireDartReference {
   final StructuredQuery _structuredQuery = StructuredQuery();
 
-  QueryReference(FirestoreGateway gateway, String path) : super(gateway, path) {
+  FireDartQueryReference(FireDartFirestoreGateway gateway, String path)
+      : super(gateway, path) {
     _structuredQuery.from
         .add(StructuredQuery_CollectionSelector()..collectionId = id);
   }
 
-  QueryReference where(
+  FireDartQueryReference where(
     String fieldPath, {
     dynamic isEqualTo,
     dynamic isLessThan,
@@ -307,13 +316,13 @@ class QueryReference extends Reference {
     return this;
   }
 
-  /// Returns [QueryReference] that's additionally sorted by the specified
+  /// Returns [FireDartQueryReference] that's additionally sorted by the specified
   /// [fieldPath].
   ///
   /// The field is a [String] representing a single field name.
-  /// After a [QueryReference] order by call, you cannot add any more [orderBy]
+  /// After a [FireDartQueryReference] order by call, you cannot add any more [orderBy]
   /// calls.
-  QueryReference orderBy(
+  FireDartQueryReference orderBy(
     String fieldPath, {
     bool descending = false,
   }) {
@@ -326,14 +335,15 @@ class QueryReference extends Reference {
     return this;
   }
 
-  /// Returns [QueryReference] that's additionally limited to only return up
+  /// Returns [FireDartQueryReference] that's additionally limited to only return up
   /// to the specified number of documents.
-  QueryReference limit(int count) {
+  FireDartQueryReference limit(int count) {
     _structuredQuery.limit = Int32Value()..value = count;
     return this;
   }
 
-  Future<List<Document>> get() => _gateway.runQuery(_structuredQuery, fullPath);
+  Future<List<FireDartDocument>> get() =>
+      _gateway.runQuery(_structuredQuery, fullPath);
 
   void _addFilter(String fieldPath, dynamic value,
       {StructuredQuery_FieldFilter_Operator? operator}) {
@@ -347,7 +357,7 @@ class QueryReference extends Reference {
     } else {
       var filter = StructuredQuery_FieldFilter();
       filter.op = operator;
-      filter.value = TypeUtil.encode(value);
+      filter.value = FireDartTypeUtil.encode(value);
 
       final fieldReference = StructuredQuery_FieldReference()
         ..fieldPath = fieldPath;

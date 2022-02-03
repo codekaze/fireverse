@@ -8,13 +8,13 @@ import 'exceptions.dart';
 
 const _tokenExpirationThreshold = Duration(seconds: 30);
 
-class TokenProvider {
-  final KeyClient client;
-  final TokenStore _tokenStore;
+class FireDartTokenProvider {
+  final FireDartKeyClient client;
+  final FireDartTokenStore _tokenStore;
 
   final StreamController<bool> _signInStateStreamController;
 
-  TokenProvider(this.client, this._tokenStore)
+  FireDartTokenProvider(this.client, this._tokenStore)
       : _signInStateStreamController = StreamController<bool>();
 
   String? get userId => _tokenStore.userId;
@@ -26,7 +26,7 @@ class TokenProvider {
   Stream<bool> get signInState => _signInStateStreamController.stream;
 
   Future<String> get idToken async {
-    if (!isSignedIn) throw SignedOutException();
+    if (!isSignedIn) throw FireDartSignedOutException();
 
     if (_tokenStore.expiry!
         .subtract(_tokenExpirationThreshold)
@@ -72,7 +72,7 @@ class TokenProvider {
         break;
       case 400:
         signOut();
-        throw AuthException(response.body);
+        throw FireDartAuthException(response.body);
     }
   }
 

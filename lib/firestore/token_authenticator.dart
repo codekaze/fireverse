@@ -2,13 +2,13 @@ import 'package:grpc/grpc.dart';
 
 import '../firedart.dart';
 
-class TokenAuthenticator {
-  final FirebaseAuth auth;
+class FireDartTokenAuthenticator {
+  final FireDartFirebaseAuth auth;
 
-  TokenAuthenticator._internal(this.auth);
+  FireDartTokenAuthenticator._internal(this.auth);
 
-  static TokenAuthenticator? from(FirebaseAuth? auth) =>
-      auth != null ? TokenAuthenticator._internal(auth) : null;
+  static FireDartTokenAuthenticator? from(FireDartFirebaseAuth? auth) =>
+      auth != null ? FireDartTokenAuthenticator._internal(auth) : null;
 
   Future<void> authenticate(Map<String, String> metadata, String uri) async {
     var idToken = await auth.tokenProvider.idToken;

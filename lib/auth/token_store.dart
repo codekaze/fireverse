@@ -1,5 +1,5 @@
-abstract class TokenStore {
-  Token? _token;
+abstract class FireDartTokenStore {
+  FireDartToken? _token;
 
   String? get userId => _token?._userId;
 
@@ -14,19 +14,19 @@ abstract class TokenStore {
   void setToken(
       String userId, String idToken, String refreshToken, int expiresIn) {
     var expiry = DateTime.now().add(Duration(seconds: expiresIn));
-    _token = Token(userId, idToken, refreshToken, expiry);
+    _token = FireDartToken(userId, idToken, refreshToken, expiry);
     write(_token);
   }
 
-  TokenStore() {
+  FireDartTokenStore() {
     _token = read();
   }
 
   /// Force refresh - useful for testing
   void expireToken() {
     assert(_token != null);
-    _token = Token(_token!._userId, _token!._idToken, _token!._refreshToken,
-        DateTime.now());
+    _token = FireDartToken(_token!._userId, _token!._idToken,
+        _token!._refreshToken, DateTime.now());
     write(_token);
   }
 
@@ -36,36 +36,36 @@ abstract class TokenStore {
   }
 
   /// Restore the refresh token from storage, returns null if token isn't stored
-  Token? read();
+  FireDartToken? read();
 
   /// Persist the refresh token
-  void write(Token? token);
+  void write(FireDartToken? token);
 
   void delete();
 }
 
 /// Doesn't actually persist tokens. Useful for testing or in environments where
 /// persistence isn't available but it's fine signing in for each session.
-class VolatileStore extends TokenStore {
+class FireDartVolatileStore extends FireDartTokenStore {
   @override
-  Token? read() => null;
+  FireDartToken? read() => null;
 
   @override
-  void write(Token? token) {}
+  void write(FireDartToken? token) {}
 
   @override
   void delete() {}
 }
 
-class Token {
+class FireDartToken {
   final String _userId;
   final String _idToken;
   final String _refreshToken;
   final DateTime _expiry;
 
-  Token(this._userId, this._idToken, this._refreshToken, this._expiry);
+  FireDartToken(this._userId, this._idToken, this._refreshToken, this._expiry);
 
-  Token.fromMap(Map<String, dynamic> map)
+  FireDartToken.fromMap(Map<String, dynamic> map)
       : this(
           map['userId'],
           map['idToken'],
