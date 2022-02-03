@@ -1,19 +1,40 @@
-/*
-? The Combination of Firedart + Official Firebase Packages
-const firebaseConfig = {
-  apiKey: "AIzaSyAjaGYDdHvb0_vsG3JRS6ZVUegaicjn5Uo",
-  authDomain: "freeproject-c8687.firebaseapp.com",
-  projectId: "freeproject-c8687",
-  storageBucket: "freeproject-c8687.appspot.com",
-  messagingSenderId: "803703594987",
-  appId: "1:803703594987:web:1eab5d874a2b50260783ae"
-};
-*/
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart' as fs;
+import 'package:firedartextreme/generated/google/protobuf/timestamp.pb.dart'
+    as fd;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firedartextreme/firedart.dart';
+
+class FireGlobalOrder {
+  final String field;
+  final bool descending;
+
+  FireGlobalOrder({
+    required this.field,
+    this.descending = false,
+  });
+}
+
+class FireGlobalWhereField {
+  final String field;
+  final String? isEqualTo;
+  final String? isGreaterThan;
+  final String? isGreaterThanOrEqualTo;
+  final String? isLessThan;
+  final String? isLessThanOrEqualTo;
+
+  FireGlobalWhereField({
+    required this.field,
+    this.isEqualTo,
+    this.isGreaterThan,
+    this.isGreaterThanOrEqualTo,
+    this.isLessThan,
+    this.isLessThanOrEqualTo,
+  });
+}
 
 class FireGlobal {
   static Future initialize({
@@ -28,18 +49,18 @@ class FireGlobal {
 
       //Wait Until SignIn Ready?
 
-      bool ready = false;
+      // bool ready = false;
 
-      var auth = FireDartFirebaseAuth.instance;
-      auth.signInState.listen((state) {
-        print("Signed ${state ? "in" : "out"}");
-        ready = false;
-      });
+      // var auth = FireDartFirebaseAuth.instance;
+      // auth.signInState.listen((state) {
+      //   print("Signed ${state ? "in" : "out"}");
+      //   ready = false;
+      // });
 
-      while (ready == false) {
-        print("Check Firebase Status..");
-        await Future.delayed(Duration(milliseconds: 200));
-      }
+      // while (ready == false) {
+      //   print("Check Firebase Status..");
+      //   await Future.delayed(Duration(milliseconds: 200));
+      // }
     } else {
       await Firebase.initializeApp(
         options: FirebaseOptions(
@@ -102,6 +123,140 @@ class FireGlobal {
   }
 
   static GlobalUser? currentUser;
+
+  static snapshot({
+    required String collectionName,
+  }) async {
+    if (Platform.isWindows) {
+      return await FireDartFirestore.instance.collection(collectionName).stream;
+    } else {
+      return await fs.FirebaseFirestore.instance
+          .collection(collectionName)
+          .snapshots();
+    }
+  }
+
+  static get({
+    required String collectionName,
+    List<FireGlobalWhereField>? where,
+    FireGlobalOrder? fireGlobalOrder,
+  }) async {
+    if (Platform.isWindows) {
+      var refs = [];
+      var ref = FireDartFirestore.instance.collection(collectionName);
+      refs.add(ref);
+
+      if (where != null) {
+        for (var i = 0; i < where.length; i++) {
+          if (where[i].isEqualTo != null) {
+            var newref = ref.where(
+              where[i].field,
+              isEqualTo: where[i].isEqualTo,
+            );
+            refs.add(newref);
+          } else if (where[i].isGreaterThan != null) {
+            var newref = ref.where(
+              where[i].field,
+              isGreaterThan: where[i].isGreaterThan,
+            );
+            refs.add(newref);
+          } else if (where[i].isGreaterThanOrEqualTo != null) {
+            var newref = ref.where(
+              where[i].field,
+              isGreaterThanOrEqualTo: where[i].isGreaterThanOrEqualTo,
+            );
+            refs.add(newref);
+          } else if (where[i].isLessThan != null) {
+            var newref = ref.where(
+              where[i].field,
+              isLessThan: where[i].isLessThan,
+            );
+            refs.add(newref);
+          } else if (where[i].isLessThanOrEqualTo != null) {
+            var newref = ref.where(
+              where[i].field,
+              isLessThanOrEqualTo: where[i].isLessThanOrEqualTo,
+            );
+            refs.add(newref);
+          }
+        }
+      }
+
+      if (fireGlobalOrder != null) {
+        var newref = ref.orderBy(
+          fireGlobalOrder.field,
+          descending: fireGlobalOrder.descending,
+        );
+        refs.add(newref);
+      }
+
+      var finalRef = refs.last;
+      return await finalRef.get();
+    } else {
+      var ref = fs.FirebaseFirestore.instance.collection(collectionName);
+      return await ref.get();
+    }
+  }
+
+  static add({
+    required String collectionName,
+    required Map<String, dynamic> value,
+  }) async {
+    if (Platform.isWindows) {
+      return await FireDartFirestore.instance
+          .collection(collectionName)
+          .add(value);
+    } else {
+      return await fs.FirebaseFirestore.instance
+          .collection(collectionName)
+          .add(value);
+    }
+  }
+
+  static update({
+    required String collectionName,
+    required String docId,
+    required Map<String, dynamic> value,
+  }) async {
+    if (Platform.isWindows) {
+      return await FireDartFirestore.instance
+          .collection(collectionName)
+          .doc(docId)
+          .update(value);
+    } else {
+      return await fs.FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(docId)
+          .update(value);
+    }
+  }
+
+  static delete({
+    required String collectionName,
+    required String docId,
+    required Map<String, dynamic> value,
+  }) async {
+    if (Platform.isWindows) {
+      return await FireDartFirestore.instance
+          .collection(collectionName)
+          .doc(docId)
+          .delete();
+    } else {
+      return await fs.FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(docId)
+          .delete();
+    }
+  }
+
+  static timestamp() {
+    if (Platform.isWindows) {
+      return DateTime.now();
+    } else {
+      // return fs.Timestamp.now();
+      return DateTime.now();
+    }
+  }
 }
 
 class GlobalUser {
