@@ -131,25 +131,13 @@ class Fire {
 
   static GlobalUser? currentUser;
 
-  static snapshot({
-    required String collectionName,
-  }) async {
-    if (Platform.isWindows) {
-      return await FireDartFirestore.instance.collection(collectionName).stream;
-    } else {
-      return await fs.FirebaseFirestore.instance
-          .collection(collectionName)
-          .snapshots();
-    }
-  }
-
-  static get({
+  static getRefFromWhereAndOrder({
     required String collectionName,
     List<FireWhereField>? where,
     FireOrder? orderBy,
-  }) async {
+  }) {
+    var refs = [];
     if (Platform.isWindows) {
-      var refs = [];
       var ref = FireDartFirestore.instance.collection(collectionName);
       refs.add(ref);
 
@@ -198,9 +186,100 @@ class Fire {
       }
 
       var finalRef = refs.last;
-      return await finalRef.get();
+      return finalRef;
     } else {
       var ref = fs.FirebaseFirestore.instance.collection(collectionName);
+      refs.add(ref);
+
+      if (where != null) {
+        for (var i = 0; i < where.length; i++) {
+          if (where[i].isEqualTo != null) {
+            var newref = ref.where(
+              where[i].field,
+              isEqualTo: where[i].isEqualTo,
+            );
+            refs.add(newref);
+          } else if (where[i].isGreaterThan != null) {
+            var newref = ref.where(
+              where[i].field,
+              isGreaterThan: where[i].isGreaterThan,
+            );
+            refs.add(newref);
+          } else if (where[i].isGreaterThanOrEqualTo != null) {
+            var newref = ref.where(
+              where[i].field,
+              isGreaterThanOrEqualTo: where[i].isGreaterThanOrEqualTo,
+            );
+            refs.add(newref);
+          } else if (where[i].isLessThan != null) {
+            var newref = ref.where(
+              where[i].field,
+              isLessThan: where[i].isLessThan,
+            );
+            refs.add(newref);
+          } else if (where[i].isLessThanOrEqualTo != null) {
+            var newref = ref.where(
+              where[i].field,
+              isLessThanOrEqualTo: where[i].isLessThanOrEqualTo,
+            );
+            refs.add(newref);
+          }
+        }
+      }
+
+      if (orderBy != null) {
+        var newref = ref.orderBy(
+          orderBy.field,
+          descending: orderBy.descending,
+        );
+        refs.add(newref);
+      }
+
+      var finalRef = refs.last;
+      return finalRef;
+    }
+  }
+
+  static snapshot({
+    required String collectionName,
+    List<FireWhereField>? where,
+    FireOrder? orderBy,
+  }) async {
+    if (Platform.isWindows) {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+        where: where,
+        orderBy: orderBy,
+      );
+      return await ref.stream;
+    } else {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+        where: where,
+        orderBy: orderBy,
+      );
+      return await ref.snapshot();
+    }
+  }
+
+  static get({
+    required String collectionName,
+    List<FireWhereField>? where,
+    FireOrder? orderBy,
+  }) async {
+    if (Platform.isWindows) {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+        where: where,
+        orderBy: orderBy,
+      );
+      return await ref.get();
+    } else {
+      var ref = getRefFromWhereAndOrder(
+        collectionName: collectionName,
+        where: where,
+        orderBy: orderBy,
+      );
       return await ref.get();
     }
   }
