@@ -32,3 +32,104 @@ Basically, this package is a combination of FireDart and the official Firebase l
 
 #### Firebase Messaging
 - [ ] ---
+
+
+### Documentation
+---
+
+#### Initialize
+
+```
+await Fire.initialize(
+  apiKey: apiKey,
+  projectId: projectId,
+  appId: appId,
+  messagingSenderId: messagingSenderId,
+);
+```
+
+#### Sign In
+```
+Fire.signIn(
+  email: "demo@codekaze.com",
+  password: "123456",
+);
+```
+
+#### Sign Out
+```
+await Fire.signOut();
+```
+
+
+#### Firestore Add
+```
+await Fire.add(
+  collectionName: "product",
+  value: {
+    "product_name": "GTX Mouse",
+    "price": 12500,
+  },
+);
+```
+
+#### Firestore Update
+```
+await Fire.update(
+  collectionName: "product",
+  docId: "B7NUBHGZJd7xNlxoYtsa",
+  value: {
+    "product_name": "GTX Mouse",
+    "price": 12500,
+  },
+);
+```
+
+#### Firestore Delete
+```
+await Fire.delete(
+  collectionName: "product",
+  docId: "B7NUBHGZJd7xNlxoYtsa",
+);
+```
+
+#### Firestore Snapshot
+```
+await Fire.snapshot(
+  collectionName: "product",
+);
+```
+
+#### Firestore Get
+```
+await Fire.get(
+  collectionName: "product",
+);
+```
+
+#### Firestore Get - Order By
+```
+await Fire.get(
+  collectionName: "product",
+  orderBy: FireOrder(
+    field: "created_at",
+  ),
+);
+```
+
+#### Firestore Get - Where & Order By
+```
+await Fire.get(
+  collectionName: "product",
+  where: [
+    FireWhereField(
+      field: "product_name",
+      isEqualTo: "GTX Mouse",
+    ),
+  ],
+  orderBy: FireOrder(
+    field: "created_at",
+  ),
+);
+```
+

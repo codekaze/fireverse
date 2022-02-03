@@ -82,6 +82,14 @@ class Fire {
     }
   }
 
+  static Future signOut() async {
+    if (Platform.isWindows) {
+      FireDartFirebaseAuth.instance.signOut();
+    } else {
+      await FirebaseAuth.instance.signOut();
+    }
+  }
+
   static Future<bool> signIn({
     required String email,
     required String password,
@@ -138,7 +146,7 @@ class Fire {
   static get({
     required String collectionName,
     List<FireWhereField>? where,
-    FireOrder? FireOrder,
+    FireOrder? orderBy,
   }) async {
     if (Platform.isWindows) {
       var refs = [];
@@ -181,10 +189,10 @@ class Fire {
         }
       }
 
-      if (FireOrder != null) {
+      if (orderBy != null) {
         var newref = ref.orderBy(
-          FireOrder.field,
-          descending: FireOrder.descending,
+          orderBy.field,
+          descending: orderBy.descending,
         );
         refs.add(newref);
       }
