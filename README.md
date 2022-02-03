@@ -27,5 +27,8 @@ Basically, this package is a combination of FireDart and the official Firebase l
 - [x] .update 
 - [x] .delete
 
+#### Utility
+- [ ] Timestamp
+
 #### Firebase Messaging
 - [ ] ---
