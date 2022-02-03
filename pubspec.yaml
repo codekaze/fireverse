@@ -1,5 +1,5 @@
 name: fireverse
-description: A dart-native implementation of the Firebase Auth and Firestore SDKs.
+description: Multi platform firebase plugin.
 version: 0.0.1
 homepage: https://github.com/codekaze/fireverse
 
