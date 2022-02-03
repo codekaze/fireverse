@@ -90,6 +90,48 @@ class Fire {
     }
   }
 
+  static Future<bool> signInAnonymously() async {
+    if (Platform.isWindows) {
+      try {
+        var auth = FireDartFirebaseAuth.instance;
+        await auth.signInAnonymously();
+        if (auth.isSignedIn) {
+          var user = await auth.getUser();
+          currentUser = GlobalUser(
+            uid: user.id,
+            displayName: user.displayName,
+            email: user.email,
+            phoneNumber: null,
+            photoURL: user.photoUrl,
+          );
+          return true;
+        }
+
+        return true;
+      } on Exception catch (_) {
+        return false;
+      }
+    } else {
+      try {
+        var auth = await FirebaseAuth.instance.signInAnonymously();
+        if (auth.user != null) {
+          currentUser = GlobalUser(
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            displayName: FirebaseAuth.instance.currentUser!.displayName,
+            email: FirebaseAuth.instance.currentUser!.email,
+            phoneNumber: FirebaseAuth.instance.currentUser!.phoneNumber,
+            photoURL: FirebaseAuth.instance.currentUser!.photoURL,
+          );
+          return true;
+        }
+
+        return true;
+      } on Exception catch (_) {
+        return false;
+      }
+    }
+  }
+
   static Future<bool> signIn({
     required String email,
     required String password,
