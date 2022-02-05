@@ -38,6 +38,7 @@ class Fire {
     required String projectId,
     required String appId,
     required String messagingSenderId,
+    bool useGoogleServicesJson = false,
   }) async {
     if (Platform.isWindows) {
       FireDartFirebaseAuth.initialize(apiKey, FireDartVolatileStore());
@@ -58,14 +59,18 @@ class Fire {
       //   await Future.delayed(Duration(milliseconds: 200));
       // }
     } else {
-      await Firebase.initializeApp(
-        options: FirebaseOptions(
-          appId: appId,
-          apiKey: apiKey,
-          messagingSenderId: messagingSenderId,
-          projectId: projectId,
-        ),
-      );
+      if (useGoogleServicesJson) {
+        await Firebase.initializeApp();
+      } else {
+        await Firebase.initializeApp(
+          options: FirebaseOptions(
+            appId: appId,
+            apiKey: apiKey,
+            messagingSenderId: messagingSenderId,
+            projectId: projectId,
+          ),
+        );
+      }
 
       bool ready = false;
       FirebaseAuth.instance.authStateChanges().listen((event) {
