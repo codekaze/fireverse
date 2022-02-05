@@ -399,6 +399,7 @@ class Fire {
     }
   }
 
+  //TODO: return a reference model please, with .get, .add, .delete features
   static getDocRef({
     required String collectionName,
     required String docId,
@@ -416,6 +417,7 @@ class Fire {
     }
   }
 
+  //TODO: return a reference model please, with .get, .add, .delete features
   static getCollectionRef({
     required String collectionName,
   }) {
